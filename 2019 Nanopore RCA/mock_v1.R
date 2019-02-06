@@ -58,7 +58,7 @@ nchar(fastq$sequ[i])
 
 ########
 # run usearch
-A <- system2("usearch", paste("-usearch_local ", fastafile[m], " -db REF_TAGS.txt -strand both -id 0.7 -blast6out out.txt -maxaccepts 0 -maxrejects 0 -alnout align.txt -mosaic -mincols 80", sep=""))
+A <- system2("usearch", paste("-usearch_local ", fastafile[m], " -db REF_TAGS.txt -strand both -id 0.7 -blast6out out.txt -maxaccepts 0 -maxrejects 0 -alnout align.txt -mosaic -mincols 80", sep=""), stderr=F)
 
 
 # get matches to tag DB
@@ -140,9 +140,9 @@ dir.create("alignments")
 
 split <- list.files("split", full.names=T, pattern= ".fasta")
 
-
+i <-1
 for(i in 1:length(split)){
-A <- system2("mafft", paste("--auto ", split[i], " > ", sub("split(.*).fasta", "alignments\\1_aln.fasta", split[i]), " --thread 12", sep=""))
+A <- system2("mafft", paste("--thread -1 --auto ", split[i], " > ", sub("split(.*).fasta", "alignments\\1_aln.fasta", split[i]), sep=""), stderr=F)
 }
 
 
