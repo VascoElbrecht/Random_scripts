@@ -3,10 +3,17 @@
 setwd("~/Documents/University/2018 Guelph/2019 nano RCA/1 bioinformatics/Mock50_v1")
 
 
-fastafile <- "4x4000.fastq"
+fastafile <- list.files("../../Raw_data_mock50_v1", full.names=T)
+
+readsperfile <- NULL
+
+m <-1
+for (m in 1:length(fastafile)){ # multi file processing!
+
+
 
 # import fastq
-fastq <- readLines(fastafile)
+fastq <- readLines(fastafile[m])
 
 # convert to table
 fastq <- data.frame("ID"=fastq[seq(1, length(fastq), 4)], "sequ"=fastq[seq(2, length(fastq), 4)], "Q"=fastq[seq(4, length(fastq), 4)], "length"= nchar(fastq[seq(2, length(fastq), 4)]), stringsAsFactors=F)
@@ -51,7 +58,7 @@ nchar(fastq$sequ[i])
 
 ########
 # run usearch
-system2("usearch", paste("-usearch_local ", fastafile, " -db REF_TAGS.txt -strand both -id 0.7 -blast6out out.txt -maxaccepts 0 -maxrejects 0 -alnout align.txt -mosaic -mincols 80", sep=""))
+system2("usearch", paste("-usearch_local ", fastafile[m], " -db REF_TAGS.txt -strand both -id 0.7 -blast6out out.txt -maxaccepts 0 -maxrejects 0 -alnout align.txt -mosaic -mincols 80", sep=""))
 
 
 # get matches to tag DB
@@ -65,6 +72,8 @@ temp <- temp[temp$Freq>=10,]
 nrow(temp)
 
 IDs <- as.character(temp$Var1)
+
+readsperfile[m] <- length(IDs)
 
 dir.create("split")
 
@@ -102,7 +111,7 @@ cat(c(sub("@", ">", export[1]), export[2]), file=paste("split/", sub("(.*) runid
 glumanda <- c(1, (nchar(export[2])/rund)*1:rund)
 for (y in 1:rund){ # save split
 
-export2 <- c(export[1],
+export2 <- c(paste(export[1], "__", y, sep=""),
 substr(export[2], glumanda[y]+58, glumanda[y+1]+58),
 "+",
 substr(export[4], glumanda[y]+58, glumanda[y+1]+58))
@@ -136,6 +145,13 @@ for(i in 1:length(split)){
 system2("mafft", paste("--auto ", split[i], " > ", sub("split(.*).fasta", "alignments\\1_aln.fasta", split[i]), sep=""))
 }
 
+
+print(m)
+} # end multifiles processing
+
+
+
+write.csv(data.frame(fastafile, readsperfile), file="reads_per_4k.csv")
 
 
 
