@@ -1,0 +1,19 @@
+#190205
+
+
+cd "/Users/luckylion/Documents/University/2018 Guelph/2019 nano RCA/1 bioinformatics/Mock50_v1"
+
+
+
+usearch -usearch_local ../../Raw_data_mock50_v1/FAK42214_477fdb09921842662b221840eee0fbc8d6530bea_3.fastq -db ../sandbox/181013_primers_nanoport.txt -strand both -id 0.7 -blast6out out.txt -maxaccepts 0 -maxrejects 0 -alnout align.txt -mosaic
+
+
+
+
+usearch -usearch_local ../../Raw_data_mock50_v1/FAK42214_477fdb09921842662b221840eee0fbc8d6530bea_3.fastq -db ../sandbox/181013_primers_nanoport.txt -strand both -id 0.7 -blast6out out.txt -maxaccepts 0 -maxrejects 0 -alnout align.txt -mosaic -lopen 2 -lext 0.5 -mismatch -0.5
+
+
+
+
+
+usearch -usearch_local ../../Raw_data_mock50_v1/FAK42214_477fdb09921842662b221840eee0fbc8d6530bea_3.fastq -db REF_TAGS.txt -strand both -id 0.7 -blast6out out.txt -maxaccepts 0 -maxrejects 0 -alnout align.txt -mosaic -mincols 80
