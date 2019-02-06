@@ -25,7 +25,7 @@ nrow(fastq)
 fastq <- fastq[fastq$length>=5000,]
 nrow(fastq)
 
-
+fastq$ID <- sub("^@", "", fastq$ID)
 
 
 #####
@@ -84,17 +84,23 @@ for (i in 1:length(IDs)){
 matched <- data[data$V1==IDs[i],]
 matched <- matched[order(matched$V7, decreasing=F),]
 
-sequ <- fastq[fastq$ID==paste("@", IDs[i], sep=""),]
+sequ <- fastq[fastq$ID==IDs[i],]
+
+
+# demultiplexing
+TAG <- data$V2[data$V1==IDs[i]]
+TAG <- names(sort(table(TAG), decreasing=T)[1])
+
 
 #overwrite old files
-cat("", file=paste("split/", sub("(.*) runid.*", "\\1", IDs[i]), ".fastq", sep=""), append=F, sep="")
-cat("", file=paste("split/", sub("(.*) runid.*", "\\1", IDs[i]), ".fasta", sep=""), append=F, sep="")
+cat("", file=paste("split/", TAG, "___", sub("(.*) runid.*", "\\1", IDs[i]), ".fastq", sep=""), append=F, sep="")
+cat("", file=paste("split/", TAG, "___", sub("(.*) runid.*", "\\1", IDs[i]), ".fasta", sep=""), append=F, sep="")
 
 
 for (k in 1:(nrow(matched)-1)){
 
 
-export <- c(paste(sub("(.*) runid.*", "\\1", sequ$ID), "___", k, sep=""),
+export <- c(paste("@", TAG, "___", sub("(.*) runid.*", "\\1", sequ$ID), "___", k, sep=""),
 substr(sequ$sequ, matched$V7[k]+58, matched$V7[k+1]+58),
 "+",
 substr(sequ$Q, matched$V7[k]+58, matched$V7[k+1]+58))
@@ -102,9 +108,9 @@ substr(sequ$Q, matched$V7[k]+58, matched$V7[k+1]+58))
 rund <- round(nchar(export[2])/750)
 
 if(rund<2){
-cat(export, file=paste("split/", sub("(.*) runid.*", "\\1", IDs[i]), ".fastq", sep=""), append=T, sep="\n")
+cat(export, file=paste("split/", TAG, "___", sub("(.*) runid.*", "\\1", IDs[i]), ".fastq", sep=""), append=T, sep="\n")
 #save fasta
-cat(c(sub("@", ">", export[1]), export[2]), file=paste("split/", sub("(.*) runid.*", "\\1", IDs[i]), ".fasta", sep=""), append=T, sep="\n")
+cat(c(sub("@", ">", export[1]), export[2]), file=paste("split/", TAG, "___", sub("(.*) runid.*", "\\1", IDs[i]), ".fasta", sep=""), append=T, sep="\n")
 
 } else { # split long in middle
 
@@ -115,11 +121,11 @@ export2 <- c(paste(export[1], "__", y, sep=""),
 substr(export[2], glumanda[y]+58, glumanda[y+1]+58),
 "+",
 substr(export[4], glumanda[y]+58, glumanda[y+1]+58))
-cat(export2, file=paste("split/", sub("(.*) runid.*", "\\1", IDs[i]), ".fastq", sep=""), append=T, sep="\n")
+cat(export2, file=paste("split/", TAG, "___", sub("(.*) runid.*", "\\1", IDs[i]), ".fastq", sep=""), append=T, sep="\n")
 
 
 #save fasta
-cat(c(sub("@", ">", export2[1]), export2[2]), file=paste("split/", sub("(.*) runid.*", "\\1", IDs[i]), ".fasta", sep=""), append=T, sep="\n")
+cat(c(sub("@", ">", export2[1]), export2[2]), file=paste("split/", TAG, "___", sub("(.*) runid.*", "\\1", IDs[i]), ".fasta", sep=""), append=T, sep="\n")
 
 
 } # split extra
@@ -131,6 +137,9 @@ cat(c(sub("@", ">", export2[1]), export2[2]), file=paste("split/", sub("(.*) run
 
 } # loop end
 
+print(m)
+
+} # end multifiles processing
 
 ########
 # Make sequence alignments
@@ -144,10 +153,6 @@ i <-1
 for(i in 1:length(split)){
 A <- system2("mafft", paste("--thread -1 --auto ", split[i], " > ", sub("split(.*).fasta", "alignments\\1_aln.fasta", split[i]), sep=""), stderr=F)
 }
-
-
-print(m)
-} # end multifiles processing
 
 
 
