@@ -171,9 +171,9 @@ Empty_folder()
 
 
 
-Cutadapt(forward="GGTCAACAAATCATAAAGAYATYGG", reverse="TAAACTTCAGGGTGACCAAARAAYCA", anchoring=F, fastq=F, bothsides=F)
+Cutadapt(forward="GGTCAACAAATCATAAAGAYATYGG", reverse="TAAACTTCAGGGTGACCAAARAAYCA", anchoring=F, fastq=F, bothsides=T)
 
-
+Remove_last_folder()
 
 
 
