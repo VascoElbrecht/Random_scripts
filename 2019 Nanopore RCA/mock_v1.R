@@ -13,6 +13,10 @@ fastafile <- list.files("../../Raw_data_mock50_v1", full.names=T)
 
 readsperfile <- NULL
 
+
+dir.create("split")
+
+
 m <-1
 for (m in 1:length(fastafile)){ # multi file processing!
 
@@ -81,7 +85,7 @@ IDs <- as.character(temp$Var1)
 
 readsperfile[m] <- length(IDs)
 
-dir.create("split")
+
 
 
 for (i in 1:length(IDs)){
@@ -185,7 +189,7 @@ Empty_folder()
 #Cutadapt(forward="GGTCAACAAATCATAAAGAYATYGG", reverse="TAAACTTCAGGGTGACCAAARAAYCA", anchoring=F, fastq=F, bothsides=T)
 
 
-
+Map2ref(refDB="MOCK_50_haplotypes_wobble.txt", strand="both",  onlykeephits=F, id=0.95)
 
 
 Remove_last_folder()
