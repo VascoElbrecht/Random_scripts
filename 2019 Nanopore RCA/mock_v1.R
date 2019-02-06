@@ -1,4 +1,10 @@
-# nanopore madness
+# Vasco Elbrecht 2019 Feb 06
+# luckylion07@googlemail.com
+# 
+# nanopore RCA consensus building
+# Needs mafft and usearch, and Vsearch installed
+# Consensus generation is done in geneious
+# JAMP package needed for mapping of consensus sequences
 
 setwd("~/Documents/University/2018 Guelph/2019 nano RCA/1 bioinformatics/Mock50_v1")
 
@@ -176,7 +182,11 @@ Empty_folder()
 
 
 
-Cutadapt(forward="GGTCAACAAATCATAAAGAYATYGG", reverse="TAAACTTCAGGGTGACCAAARAAYCA", anchoring=F, fastq=F, bothsides=T)
+#Cutadapt(forward="GGTCAACAAATCATAAAGAYATYGG", reverse="TAAACTTCAGGGTGACCAAARAAYCA", anchoring=F, fastq=F, bothsides=T)
+
+
+
+
 
 Remove_last_folder()
 
