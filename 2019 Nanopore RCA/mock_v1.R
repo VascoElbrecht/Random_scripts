@@ -86,9 +86,9 @@ for (k in 1:(nrow(matched)-1)){
 
 
 export <- c(paste(sub("(.*) runid.*", "\\1", sequ$ID), "___", k, sep=""),
-substr(sequ$sequ, matched$V7[k], matched$V7[k+1]),
+substr(sequ$sequ, matched$V7[k]+58, matched$V7[k+1]+58),
 "+",
-substr(sequ$Q, matched$V7[k], matched$V7[k+1]))
+substr(sequ$Q, matched$V7[k]+58, matched$V7[k+1]+58))
 
 rund <- round(nchar(export[2])/750)
 
@@ -103,9 +103,9 @@ glumanda <- c(1, (nchar(export[2])/rund)*1:rund)
 for (y in 1:rund){ # save split
 
 export2 <- c(export[1],
-substr(export[2], glumanda[y], glumanda[y+1]),
+substr(export[2], glumanda[y]+58, glumanda[y+1]+58),
 "+",
-substr(export[4], glumanda[y], glumanda[y+1]))
+substr(export[4], glumanda[y]+58, glumanda[y+1]+58))
 cat(export2, file=paste("split/", sub("(.*) runid.*", "\\1", IDs[i]), ".fastq", sep=""), append=T, sep="\n")
 
 
