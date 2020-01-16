@@ -9,8 +9,8 @@ library("rjson")
 
 symbol <- "TSLA"
 symbol <- "AAPL"
-
-
+symbol <- "ILMN"
+symbol <- "IRBT"
 
 chart <- fromJSON(file=paste("https://financialmodelingprep.com/api/v3/historical-price-full/", symbol, "?serietype=line", sep=""))
 
@@ -23,8 +23,8 @@ chart <- data.frame("date"=as.Date(chart[seq(1, length(chart), 2)]), "price"=as.
 plot(chart$date, chart$price, type='l', yaxt="n", ylab="US $", xlab="")
 axis(2, las=1)
 
-data <- fromJSON(file="https://financialmodelingprep.com/api/v3/financials/income-statement/TSLA?period=quarter")
-
+data <- fromJSON(file=paste("https://financialmodelingprep.com/api/v3/financials/income-statement/", symbol, "?period=quarter", sep=""))
+paste("https://financialmodelingprep.com/api/v3/financials/income-statement/", symbol, "?period=quarter", sep="")
 
 financials <- unlist(data[[2]][1])
 
@@ -46,6 +46,7 @@ names(financials)
 
 
 barplot(rev(financials$Revenue/1000000))
+barplot(rev(financials$"EPS")/1000000)
 
 
 
